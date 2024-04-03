@@ -1,18 +1,17 @@
 import React from 'react';
-import { Stack, Box, Image } from '@mantine/core';
+import { Stack, Box, Image, Center } from '@mantine/core';
 
 import imageLogo from '../Assets/img/ravn-logo.png';
 
 function Sidebar({children, sx={}}) {
-    sx.borderRadius = sx.borderRadius ?? '20px'
-    sx.height = sx.height ?? '90vh'
-    sx.width = sx.width ?? '20vw'
-    sx.padding = sx.padding ?? '20px'
+    sx.borderRadius = sx.borderRadius ?? "24px"
 
     return (
-        <Box bg="#2C2F33" align='center' style={sx}>
-            <Stack align='strech' gap='xl'>
-                <Image src={imageLogo} />
+        <Box bg="#2C2F33" align='center' gap="xs" p={20} w="20vw" h="95vh" style={sx}>
+            <Stack align='strech'>
+                <Center>
+                    <Image src={imageLogo} w={40}/>
+                </Center>
                 {children}
             </Stack> 
         </Box>
