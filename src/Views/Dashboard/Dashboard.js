@@ -1,30 +1,33 @@
 import './Dashboard.css'
 
-import React from 'react';
+import React, { useEffect } from 'react';
 
+import { useQuery, gql } from '@apollo/client'
+import { LOAD_ALL_TASKS } from '../../GraphQL/Queries';
+ 
 import Sidebar from '../../Components/Sidebar';
 import MenuItem from '../../Components/MenuItem';
 import PlusButton from '../../Components/PlusButton';
 import TaskCard from '../../Components/TaskCard';
+import TaskColumn from '../../Components/TaskColumn';
 
 import { IconLayoutGrid, IconMenu2 } from '@tabler/icons-react';
 import { Group } from '@mantine/core';
 
-let inlineTask = {
-    "name": "Ticket1",
-    "tags": [
-      "ANDROID",
-      "IOS"
-    ],
-    "dueDate": "2024-04-06T02:44:21.586Z",
-    "pointEstimate": "EIGHT",
-    "assignee": {
-      "avatar": "https://avatars.dicebear.com/api/initials/gs.svg"
-    },
-    "status": "BACKLOG"
-  }
 
 function Dashboard() {
+    const {error, loading, data} = useQuery(LOAD_ALL_TASKS)
+
+    useEffect(() => {
+        console.log(data)
+    }, [data]) 
+
+    const backlogTasks = data.tasks.filter((task) => task.status === "BACKLOG")
+    const cancelledTasks = data.tasks.filter((task) => task.status === "CANCELLED")
+    const doneTasks = data.tasks.filter((task) => task.status === "DONE")
+    const inProgressTasks = data.tasks.filter((task) => task.status === "IN_PROGRESS")
+    const todoTasks = data.tasks.filter((task) => task.status === "TODO")
+
     return (
         <>
             <div className='dashboard-page'>
@@ -42,9 +45,13 @@ function Dashboard() {
                         <PlusButton />
                     </div>
                     <div className='task-board'>
-                        <div className='task-column'>
-                            <TaskCard task={inlineTask} />
-                        </div>
+                        <Group align='flex-start' wrap='nowrap'> 
+                            <TaskColumn title="Backlog" tasks={backlogTasks} />
+                            <TaskColumn title="Cancelled" tasks={cancelledTasks} />
+                            <TaskColumn title="Done" tasks={doneTasks} />
+                            <TaskColumn title="In Progress" tasks={inProgressTasks} />
+                            <TaskColumn title="Todo" tasks={todoTasks} />
+                        </Group>
                     </div>
                 </div>
             </div>  

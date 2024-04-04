@@ -57,6 +57,35 @@ function TaskCard ({task, sx = {}}) {
         );
     }
 
+    function handleDueDate(date) {
+        const todayDate = new Date()
+        const differenceInMilliseconds =  date.getTime() - todayDate.getTime()
+        const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24))
+        let colorToDisplay = "#94979A" 
+        let dateToDisplay = `${date.getDay()} ${date.toLocaleString('en', { month: 'long' })}, ${date.getFullYear()}`
+
+        if(differenceInDays > 0 && differenceInDays <= 2) {
+            colorToDisplay = "#E5B454"
+        } else if (differenceInDays === 0) {
+            dateToDisplay = "TODAY"
+        } else if (differenceInDays === -1) {
+            dateToDisplay = "YESTERDAY"
+            colorToDisplay = "#DA584B"
+        } else if(differenceInDays < -1) {
+            colorToDisplay = "#DA584B"
+        }
+        
+        return (
+            <Badge bg={colorToDisplay.concat("1A")} h={32} radius={4} style={{padding: "4px 16px"}} c={colorToDisplay}>
+                <Center>
+                    <IconAlarm size={24} ></IconAlarm>
+                    <Text weight={700}>{dateToDisplay}</Text>
+                </Center>
+            </Badge>
+        )
+        
+    }
+
     return (
         <>
             <Card shadow="sm" padding="xl" withBorder style={sx}>
@@ -76,12 +105,7 @@ function TaskCard ({task, sx = {}}) {
                             <Text size="md">{wordToNumber[task.pointEstimate]} points</Text>
                         </Grid.Col>
                         <Grid.Col span="auto">
-                            <Badge bg="#94979A1A" h={32} radius={4} style={{padding: "4px 16px"}}>
-                                <Center>
-                                    <IconAlarm size={24}></IconAlarm>
-                                    {dueDate.getDay()} {dueDate.toLocaleString('en', { month: 'long' })}, {dueDate.getFullYear()}
-                                </Center>
-                            </Badge>
+                            {handleDueDate(dueDate)}
                         </Grid.Col>
                     </Grid>
                     <Group gap={8}>
@@ -89,7 +113,7 @@ function TaskCard ({task, sx = {}}) {
                             return handleTag(tag)
                         })}
                     </Group>
-                    <Avatar src={task.assignee.avatar}/>
+                    <Avatar src={task.assignee.avatar} size={32}/>
                 </Stack>
             </Card>
         </>
