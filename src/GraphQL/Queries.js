@@ -14,3 +14,12 @@ export const LOAD_ALL_TASKS = gql`
         }
     }
 `
+export const LOAD_USER_OPTIONS = gql`
+    query {
+        users {
+            avatar
+            fullName
+            id
+        }
+    }
+`

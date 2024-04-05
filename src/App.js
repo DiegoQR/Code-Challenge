@@ -1,6 +1,7 @@
 import Dashboard from './Views/Dashboard/Dashboard';
 
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from '@apollo/client';
 import { ErrorLink, onError } from '@apollo/client/link/error'

@@ -2,34 +2,33 @@ import './Dashboard.css'
 
 import React, { useEffect } from 'react';
 
-import { useQuery, gql } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { LOAD_ALL_TASKS } from '../../GraphQL/Queries';
  
 import Sidebar from '../../Components/Sidebar';
 import MenuItem from '../../Components/MenuItem';
 import PlusButton from '../../Components/PlusButton';
-import TaskCard from '../../Components/TaskCard';
 import TaskColumn from '../../Components/TaskColumn';
+import CreateTaskModal from '../../Components/CreateTaskModal';
 
 import { IconLayoutGrid, IconMenu2 } from '@tabler/icons-react';
-import { Group } from '@mantine/core';
+import { Center, Group, Modal, Text } from '@mantine/core';
+import { Loader } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 
 function Dashboard() {
     const {error, loading, data} = useQuery(LOAD_ALL_TASKS)
 
+    const [opened, {open, close}] = useDisclosure(false)
+
     useEffect(() => {
         console.log(data)
     }, [data]) 
 
-    const backlogTasks = data.tasks.filter((task) => task.status === "BACKLOG")
-    const cancelledTasks = data.tasks.filter((task) => task.status === "CANCELLED")
-    const doneTasks = data.tasks.filter((task) => task.status === "DONE")
-    const inProgressTasks = data.tasks.filter((task) => task.status === "IN_PROGRESS")
-    const todoTasks = data.tasks.filter((task) => task.status === "TODO")
-
     return (
         <>
+            <CreateTaskModal opened={opened} onClose={close} />
             <div className='dashboard-page'>
                 <div className='slidebar'>
                     <Sidebar>
@@ -42,16 +41,26 @@ function Dashboard() {
 
                     </div>
                     <div className='buttons'>
-                        <PlusButton />
+                        <PlusButton onClick={open}/>
                     </div>
                     <div className='task-board'>
+                        {error ? 
+                        <Center>
+                            <Text c="red"> ERROR!</Text>
+                        </Center>:
+                        (loading ? 
+                        <Center>
+                            <Loader color="red" />
+                        </Center> :
                         <Group align='flex-start' wrap='nowrap'> 
-                            <TaskColumn title="Backlog" tasks={backlogTasks} />
-                            <TaskColumn title="Cancelled" tasks={cancelledTasks} />
-                            <TaskColumn title="Done" tasks={doneTasks} />
-                            <TaskColumn title="In Progress" tasks={inProgressTasks} />
-                            <TaskColumn title="Todo" tasks={todoTasks} />
+                            <TaskColumn title="Backlog" tasks={data.tasks.filter((task) => task.status === "BACKLOG")} />
+                            <TaskColumn title="Cancelled" tasks={data.tasks.filter((task) => task.status === "CANCELLED")} />
+                            <TaskColumn title="Done" tasks={data.tasks.filter((task) => task.status === "DONE")} />
+                            <TaskColumn title="In Progress" tasks={data.tasks.filter((task) => task.status === "IN_PROGRESS")} />
+                            <TaskColumn title="Todo" tasks={data.tasks.filter((task) => task.status === "TODO")} />
                         </Group>
+                        ) 
+                        }
                     </div>
                 </div>
             </div>  

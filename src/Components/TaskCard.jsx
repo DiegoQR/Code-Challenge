@@ -16,14 +16,7 @@ function TaskCard ({task, sx = {}}) {
         "ZERO" : "0",
         "ONE" : "1",
         "TWO" : "2",
-        "THREE" : "3",
-        "FOUR" : "4",
-        "FIVE" : "5",
-        "SIX" : "6",
-        "SEVEN" : "7",
-        "EIGHT" : "8",
-        "NINE" : "9",
-        "TEN" : "10"
+        "FOUR" : "4"
     }
 
     const dueDate = new Date(task.dueDate)
@@ -61,22 +54,26 @@ function TaskCard ({task, sx = {}}) {
         const todayDate = new Date()
         const differenceInMilliseconds =  date.getTime() - todayDate.getTime()
         const differenceInDays = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24))
-        let colorToDisplay = "#94979A" 
+        let colorToDisplay = "#94979A"
+        let color = "#FFFFFF" 
         let dateToDisplay = `${date.getDay()} ${date.toLocaleString('en', { month: 'long' })}, ${date.getFullYear()}`
 
         if(differenceInDays > 0 && differenceInDays <= 2) {
             colorToDisplay = "#E5B454"
+            color = colorToDisplay
         } else if (differenceInDays === 0) {
             dateToDisplay = "TODAY"
         } else if (differenceInDays === -1) {
             dateToDisplay = "YESTERDAY"
             colorToDisplay = "#DA584B"
+            color = colorToDisplay
         } else if(differenceInDays < -1) {
             colorToDisplay = "#DA584B"
+            color = colorToDisplay
         }
         
         return (
-            <Badge bg={colorToDisplay.concat("1A")} h={32} radius={4} style={{padding: "4px 16px"}} c={colorToDisplay}>
+            <Badge bg={colorToDisplay.concat("1A")} h={32} radius={4} style={{padding: "4px 16px"}} c={color}>
                 <Center>
                     <IconAlarm size={24} ></IconAlarm>
                     <Text weight={700}>{dateToDisplay}</Text>
